@@ -2,22 +2,23 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Student;
+use App\Models\Subject;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    public function run()
     {
-        // User::factory(10)->create();
+        if (app()->runningInConsole() && !app()->runningUnitTests()) {
+            // Place any interactive commands here only if not running tests
+            $this->command->info('Seeding data...');
+        }
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Seed students and subjects without interaction
+        Student::factory()
+            ->count(10)
+            ->has(Subject::factory()->count(5), 'subjects')
+            ->create();
     }
 }
